@@ -2,7 +2,6 @@ const User = require("../models/User");
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 
-//update user
 router.put("/:id", async (req, res) => {
   if (req.body.userId === req.params.id || req.body.isAdmin) {
     if (req.body.password) {
@@ -26,7 +25,6 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//delete user
 router.delete("/:id", async (req, res) => {
   if (req.body.userId === req.params.id || req.body.isAdmin) {
     try {
@@ -40,7 +38,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-//get a user
 router.get("/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -50,8 +47,6 @@ router.get("/:id", async (req, res) => {
     res.status(500).json(err);
   }
 });
-
-//follow a user
 
 router.put("/:id/follow", async (req, res) => {
   if (req.body.userId !== req.params.id) {
@@ -72,8 +67,6 @@ router.put("/:id/follow", async (req, res) => {
     res.status(403).json("you cant follow yourself");
   }
 });
-
-//unfollow a user
 
 router.put("/:id/unfollow", async (req, res) => {
     if (req.body.userId !== req.params.id) {
