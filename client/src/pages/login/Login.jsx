@@ -1,6 +1,23 @@
+import { useContext, useRef } from "react";
 import "./login.css";
+import { loginCall } from "../../apiCalls";
+import { AuthContext } from "../../context/AuthContext";
+import { CircularProgress } from "@mui/material";
+import { useNavigate } from "react-router";
 
 export default function Login() {
+  const email = useRef();
+  const password = useRef();
+  const navigate = useNavigate();
+  const { isFetching, dispatch } = useContext(AuthContext);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    loginCall(
+      { email: email.current.value, password: password.current.value },
+      dispatch
+    );
+  };
+
   return (
     <div className="login">
       <div className="loginWrapper">
@@ -11,15 +28,39 @@ export default function Login() {
           </span>
         </div>
         <div className="loginRight">
-          <div className="loginBox">
-            <input placeholder="Email" className="loginInput" />
-            <input placeholder="Password" className="loginInput" />
-            <button className="loginButton">Log In</button>
+          <form className="loginBox" onSubmit={(e) => handleSubmit(e)}>
+            <input
+              required
+              ref={email}
+              type="email"
+              placeholder="Email"
+              className="loginInput"
+            />
+            <input
+              minLength="3"
+              required
+              ref={password}
+              type="password"
+              placeholder="Password"
+              className="loginInput"
+            />
+            <button className="loginButton" type="submit">
+              {isFetching ? (
+                <CircularProgress color="secondary" size="20px" />
+              ) : (
+                "Log In"
+              )}
+            </button>
             <span className="loginForgot">Forgot Password?</span>
-            <button className="loginRegisterButton">
+            <button
+              className="loginRegisterButton"
+              onClick={() => {
+                navigate("/register");
+              }}
+            >
               Create a New Account
             </button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
