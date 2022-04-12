@@ -38,7 +38,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   try {
     return res.status(200).json("File uploaded!");
   } catch (error) {
-    console.log(333333, error);
+    console.log(error);
   }
 });
 app.use("/api/auth", authRoute);

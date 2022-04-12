@@ -1,5 +1,11 @@
 import "./share.css";
-import { PermMedia, Label, Room, EmojiEmotions } from "@material-ui/icons";
+import {
+  PermMedia,
+  Label,
+  Room,
+  EmojiEmotions,
+  Cancel,
+} from "@material-ui/icons";
 import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
@@ -24,15 +30,17 @@ export default function Share() {
       try {
         await axios.post("/upload", data);
       } catch (error) {
-        console.log(1111, error);
+        console.log(error);
       }
     }
     try {
       await axios.post("/posts", newPost);
       window.location.reload();
     } catch (error) {
-      console.log(2222222, error);
+      console.log(error);
     }
+    console.log("handler", file);
+    setFile(null);
   };
   return (
     <div className="share">
@@ -51,6 +59,20 @@ export default function Share() {
           />
         </div>
         <hr className="shareHr" />
+        {file && (
+          <div className="shareImgContainer">
+            <img src={URL.createObjectURL(file)} className="shareImg" />
+            <button
+              onClick={() => {
+                console.log("cancel", file);
+                setFile(null);
+              }}
+              className="shareCancelButton"
+            >
+              <Cancel />
+            </button>
+          </div>
+        )}
         <form className="shareBottom" onSubmit={(e) => handleClick(e)}>
           <div className="shareOptions">
             <label className="shareOption" htmlFor="file">
@@ -61,7 +83,11 @@ export default function Share() {
                 id="file"
                 type="file"
                 accept=".jpg,.png,.jpeg"
-                onChange={(e) => setFile(e.target.files[0])}
+                onChange={(e) => {
+                  console.log("change before", file);
+                  setFile(e.target.files[0]);
+                  console.log("change after", file);
+                }}
               />
             </label>
             <div className="shareOption">
