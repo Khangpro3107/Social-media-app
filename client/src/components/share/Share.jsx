@@ -17,10 +17,12 @@ export default function Share() {
   const [file, setFile] = useState(null);
   const handleClick = async (e) => {
     e.preventDefault();
+    console.log(user._id, desc.current.value)
     const newPost = {
       userId: user._id,
       desc: desc.current.value,
     };
+    console.log(newPost)
     if (file) {
       const data = new FormData();
       const fileName = Date.now() + file.name;
@@ -35,11 +37,10 @@ export default function Share() {
     }
     try {
       await axios.post("/posts", newPost);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       console.log(error);
     }
-    console.log("handler", file);
     setFile(null);
   };
   return (
@@ -52,16 +53,17 @@ export default function Share() {
             alt=""
           />
           <input
-            placeholder={`What is in your mine, ${user.username}?`}
+            placeholder={`What is in your mind, ${user.username}?`}
             className="shareInput"
             type="text"
             ref={desc}
           />
         </div>
         <hr className="shareHr" />
+
         {file && (
           <div className="shareImgContainer">
-            <img src={URL.createObjectURL(file)} className="shareImg" />
+            <img alt="" src={URL.createObjectURL(file)} className="shareImg" />
             <button
               onClick={() => {
                 console.log("cancel", file);

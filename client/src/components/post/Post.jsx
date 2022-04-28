@@ -1,15 +1,18 @@
 import "./post.css";
 import { MoreVert } from "@material-ui/icons";
+import { ThumbUpOffAlt, ThumbUpAlt, CleaningServices } from "@mui/icons-material";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { format } from "timeago.js"
+import { format } from "timeago.js";
+import PostPanel from "../postpanel/PostPanel";
 
 export default function Post({ post }) {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [user, setUser] = useState({});
+  const [showPanel, setShowPanel] = useState(false);
   const pf = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currentUser } = useContext(AuthContext);
   useEffect(() => {
@@ -26,17 +29,20 @@ export default function Post({ post }) {
     setLike(isLiked ? like - 1 : like + 1);
     setIsLiked(!isLiked);
     try {
-      console.log(post, currentUser);
       await axios.put(`/posts/${post._id}/like`, { userId: currentUser._id });
     } catch (error) {
       console.log(error);
     }
+  };
+  const handlePanelClick = () => {
+    setShowPanel(!showPanel);
   };
   return (
     <div className="post">
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
+          {console.log(111111111111111, user)}
             <Link to={`/profile/${user.username}`}>
               <img
                 className="postProfileImg"
@@ -48,8 +54,11 @@ export default function Post({ post }) {
             <span className="postDate">{format(post.createdAt)}</span>
           </div>
           <div className="postTopRight">
-            <MoreVert />
+            <button onClick={handlePanelClick} className="showPanelButton">
+              <MoreVert />
+            </button>
           </div>
+          {showPanel && <PostPanel postId={post._id} userId={post.userId} showPanel={showPanel} setShowPanel={setShowPanel}/>}
         </div>
         <div className="postCenter">
           <span className="postText">{post?.desc}</span>
@@ -57,21 +66,10 @@ export default function Post({ post }) {
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
-            <img
-              className="likeIcon"
-              src={pf + "like.png"}
-              onClick={likeHandler}
-              alt=""
-            />
-            <img
-              className="likeIcon"
-              src={pf + "heart.png"}
-              onClick={likeHandler}
-              alt=""
-            />
-            <span className="postLikeCounter">
-              {like} people like it
-            </span>
+            <button onClick={likeHandler} className="likeButton">
+              {isLiked ? <ThumbUpAlt /> : <ThumbUpOffAlt />}
+            </button>
+            <span className="postLikeCounter">{like}</span>
           </div>
           <div className="postBottomRight">
             <span className="postCommentText">{post.comment} comments</span>

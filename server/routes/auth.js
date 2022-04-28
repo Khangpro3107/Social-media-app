@@ -15,7 +15,7 @@ router.post("/register", async (req, res) => {
       coverPicture: req.body.coverPicture
     });
     const user = await newUser.save();
-    res.status(200).json(user);
+    res.status(200).json("Registered successfully. Please log in.");
   } catch (err) {
     res.status(500).json(err)
   }
@@ -29,7 +29,7 @@ router.post("/login", async (req, res) => {
     const validPassword = await bcrypt.compare(req.body.password, user.password)
     if (!validPassword) return res.status(403).json("Wrong password!")
 
-    res.status(200).json(user)
+    res.status(200).json("Log in successfully.");
   } catch (err) {
     res.status(500).json(err)
   }

@@ -17,9 +17,9 @@ router.put("/:id", async (req, res) => {
     const post = await Post.findById(req.params.id);
     if (post.userId === req.body.userId) {
       await post.updateOne({ $set: req.body });
-      res.status(200).json("the post has been updated");
+      res.status(200).json("Post has been updated");
     } else {
-      res.status(403).json("you can update only your post");
+      res.status(403).json("You are not allowed to edit this post.");
     }
   } catch (err) {
     res.status(500).json(err);
@@ -29,12 +29,9 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
-    if (post.userId === req.body.userId) {
-      await post.deleteOne();
-      res.status(200).json("the post has been deleted");
-    } else {
-      res.status(403).json("you can delete only your post");
-    }
+    if (!post) return res.status(403).json("Post not found!")
+    await post.deleteOne()
+    return res.status(200).json("Post deleted!")
   } catch (err) {
     res.status(500).json(err);
   }
@@ -73,7 +70,7 @@ router.get("/timeline/:userId", async (req, res) => {
         return Post.find({ userId: friendId });
       })
     );
-    res.status(200).json(userPosts.concat(...friendPosts))
+    res.status(200).json(userPosts.concat(...friendPosts));
   } catch (err) {
     res.status(500).json(err);
   }
@@ -81,9 +78,9 @@ router.get("/timeline/:userId", async (req, res) => {
 
 router.get("/profile/:username", async (req, res) => {
   try {
-    const user = await User.findOne({username: req.params.username})
-    const posts = await Post.find({userId: user._id})
-    res.status(200).json(posts)
+    const user = await User.findOne({ username: req.params.username });
+    const posts = await Post.find({ userId: user._id });
+    res.status(200).json(posts);
   } catch (err) {
     res.status(500).json(err);
   }

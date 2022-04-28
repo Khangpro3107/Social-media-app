@@ -6,7 +6,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { AddRounded, RemoveRounded } from "@material-ui/icons";
-import {Follow, Unfollow} from "../../context/AuthActions"
+import { Follow, Unfollow } from "../../context/AuthActions";
 
 export default function Rightbar({ user }) {
   const pf = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -21,25 +21,29 @@ export default function Rightbar({ user }) {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const res = await axios.get("/users/friends/" + user._id);
-        setFriends(res.data);
-      } catch (error) {
-        console.log(error);
-      }
+        if (user) {
+          const res = await axios.get("/users/friends/" + user._id);
+          setFriends(res.data);
+        }
+      } catch (error) {}
     };
     fetchFriends();
   }, [user?._id]);
 
   const handleFollow = async () => {
-    const temp = followed
-    setFollowed(!followed)
+    const temp = followed;
+    setFollowed(!followed);
     try {
       if (temp) {
-        await axios.put(`/users/${user._id}/unfollow`, {userId: currentUser._id});
-        dispatch(Unfollow(user._id))
+        await axios.put(`/users/${user._id}/unfollow`, {
+          userId: currentUser._id,
+        });
+        dispatch(Unfollow(user._id));
       } else {
-        await axios.put(`/users/${user._id}/follow`, {userId: currentUser._id});
-        dispatch(Follow(user._id))
+        await axios.put(`/users/${user._id}/follow`, {
+          userId: currentUser._id,
+        });
+        dispatch(Follow(user._id));
       }
     } catch (error) {
       console.log(error);
