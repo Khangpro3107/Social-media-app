@@ -3,6 +3,7 @@
   overflow-y: scroll;
   position: sticky;
   height: calc(100vh - 50px);
+  top: 50px;
 }
 
 .rightbarWrapper {

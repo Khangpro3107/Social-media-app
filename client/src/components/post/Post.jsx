@@ -42,7 +42,6 @@ export default function Post({ post }) {
       <div className="postWrapper">
         <div className="postTop">
           <div className="postTopLeft">
-          {console.log(111111111111111, user)}
             <Link to={`/profile/${user.username}`}>
               <img
                 className="postProfileImg"
